@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amirah & Al Qayyum - Wedding Invitation</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Great+Vibes&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'script': ['"Great Vibes"', 'cursive'],
+                        'serif': ['"Cinzel Decorative"', 'serif'],
+                        'sans': ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        'whimsical-purple': '#9F8CB8',
+                        'whimsical-pink': '#F4C2C2',
+                        'whimsical-cream': '#FFF5F5',
+                        'whimsical-gold': '#C5A059',
+                        'whimsical-text': '#5D4E6D',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFF5F5;
+            color: #5D4E6D;
+            overflow-x: hidden;
+        }
+        
+        /* Whimsical Background Pattern */
+        .whimsical-bg {
+            background-color: #FFF5F5;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, hsla(253,16%,7%,0) 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0) 0, hsla(225,39%,30%,0) 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,0) 0, hsla(339,49%,30%,0) 50%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        /* Butterfly Animations */
+        .butterfly-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .butterfly {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+            filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.1));
+        }
+
+        /* SVG Butterfly Shape encoded */
+        .butterfly-icon {
+            width: 100%;
+            height: 100%;
+            fill: #9F8CB8;
+            animation: flutter 0.8s infinite alternate ease-in-out;
+        }
+
+        @keyframes flutter {
+            0% { transform: scaleX(1) rotateY(0deg); }
+            50% { transform: scaleX(0.8) rotateY(45deg); }
+            100% { transform: scaleX(1) rotateY(0deg); }
+        }
+
+        /* Moving paths */
+        .b1 { top: 20%; left: -10%; animation: flyRight 15s linear infinite; animation-delay: 0s; }
+        .b2 { top: 60%; left: -10%; animation: flyRight 20s linear infinite; animation-delay: 5s; }
+        .b3 { top: 40%; right: -10%; animation: flyLeft 18s linear infinite; animation-delay: 2s; }
+        .b4 { top: 80%; right: -10%; animation: flyLeft 25s linear infinite; animation-delay: 8s; }
+
+        @keyframes flyRight {
+            0% { left: -10%; top: 20%; transform: rotate(10deg); }
+            25% { top: 15%; }
+            50% { top: 25%; }
+            75% { top: 10%; }
+            100% { left: 110%; top: 20%; transform: rotate(10deg); }
+        }
+
+        @keyframes flyLeft {
+            0% { right: -10%; top: 40%; transform: scaleX(-1) rotate(10deg); }
+            25% { top: 45%; }
+            50% { top: 35%; }
+            75% { top: 50%; }
+            100% { right: 110%; top: 40%; transform: scaleX(-1) rotate(10deg); }
+        }
+
+        .flower-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+            opacity: 0.8;
+        }
+        .flower-divider::before, .flower-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 2px dotted #9F8CB8;
+            margin: 0 1rem;
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-whimsical-purple selection:text-white whimsical-bg">
+
+    <!-- Moving Butterflies -->
+    <div class="butterfly-container">
+        <div class="butterfly b1"><svg class="butterfly-icon" viewBox="0 0 24 24"><path d="M12 2C12 2 8 4 8 8C8 12 11 14 12 18C13 14 16 12 16 8C16 4 12 2 12 2ZM4 10C4 6 6 4 8 4V8C6 8 6 10 4 10ZM20 10C20 6 18 4 16 4V8C18 8 18 10 20 10ZM4 14C5 14 6 13 8 12V16C6 16 4 18 4 14ZM20 14C19 14 18 13 16 12V16C18 16 20 18 20 14Z"/></svg></div>
+        <div class="butterfly b2"><svg class="butterfly-icon" style="fill:#F4C2C2;" viewBox="0 0 24 24"><path d="M12 2C12 2 8 4 8 8C8 12 11 14 12 18C13 14 16 12 16 8C16 4 12 2 12 2ZM4 10C4 6 6 4 8 4V8C6 8 6 10 4 10ZM20 10C20 6 18 4 16 4V8C18 8 18 10 20 10ZM4 14C5 14 6 13 8 12V16C6 16 4 18 4 14ZM20 14C19 14 18 13 16 12V16C18 16 20 18 20 14Z"/></svg></div>
+        <div class="butterfly b3"><svg class="butterfly-icon" style="fill:#C5A059;" viewBox="0 0 24 24"><path d="M12 2C12 2 8 4 8 8C8 12 11 14 12 18C13 14 16 12 16 8C16 4 12 2 12 2ZM4 10C4 6 6 4 8 4V8C6 8 6 10 4 10ZM20 10C20 6 18 4 16 4V8C18 8 18 10 20 10ZM4 14C5 14 6 13 8 12V16C6 16 4 18 4 14ZM20 14C19 14 18 13 16 12V16C18 16 20 18 20 14Z"/></svg></div>
+        <div class="butterfly b4"><svg class="butterfly-icon" viewBox="0 0 24 24"><path d="M12 2C12 2 8 4 8 8C8 12 11 14 12 18C13 14 16 12 16 8C16 4 12 2 12 2ZM4 10C4 6 6 4 8 4V8C6 8 6 10 4 10ZM20 10C20 6 18 4 16 4V8C18 8 18 10 20 10ZM4 14C5 14 6 13 8 12V16C6 16 4 18 4 14ZM20 14C19 14 18 13 16 12V16C18 16 20 18 20 14Z"/></svg></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/70 backdrop-blur-md z-50 shadow-sm border-b border-white/50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="font-script text-3xl text-whimsical-purple">A & A</div>
+            <div class="space-x-4 md:space-x-8 text-sm md:text-base font-serif tracking-wider">
+                <a href="#details" class="hover:text-whimsical-purple transition-colors">Details</a>
+                <a href="#story" class="hover:text-whimsical-purple transition-colors">Our Story</a>
+                <a href="#rsvp" class="px-5 py-2 bg-whimsical-purple text-white rounded-full hover:bg-whimsical-text transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">RSVP</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center text-center px-4 pt-20 overflow-hidden">
+        <!-- Decorative bg blobs -->
+        <div class="absolute top-20 left-10 w-64 h-64 bg-whimsical-pink/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 w-72 h-72 bg-whimsical-purple/20 rounded-full blur-3xl"></div>
+
+        <div class="max-w-4xl w-full mx-auto relative z-10 p-10 glass-card rounded-2xl transform hover:scale-[1.01] transition-transform duration-700">
+            <p class="font-serif text-lg md:text-xl uppercase tracking-[0.25em] text-whimsical-text/60 mb-6">The Wedding Of</p>
+            
+            <h1 class="font-script text-6xl md:text-8xl lg:text-9xl text-whimsical-text mb-4 leading-tight drop-shadow-sm">
+                Amirah <span class="text-whimsical-pink text-5xl md:text-7xl block md:inline my-2 md:my-0">&</span> Al Qayyum
+            </h1>
+            
+            <div class="flower-divider text-whimsical-purple">
+                <i data-lucide="flower-2" class="w-8 h-8 stroke-1"></i>
+            </div>
+
+            <p class="font-serif text-xl md:text-2xl italic mb-8 text-whimsical-text/80">
+                Start our forever together
+            </p>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 font-serif text-lg md:text-xl border-t border-b border-whimsical-purple/30 py-8 mt-6">
+                <div class="flex flex-col items-center group cursor-default">
+                    <span class="font-bold text-2xl text-whimsical-purple group-hover:scale-110 transition-transform">FEB</span>
+                    <span class="text-5xl font-bold my-2 text-whimsical-text">01</span>
+                    <span class="font-bold text-2xl text-whimsical-purple">2026</span>
+                </div>
+                <div class="h-16 w-px bg-whimsical-purple/30 hidden md:block"></div>
+                <div class="flex flex-col items-center">
+                    <span class="uppercase tracking-widest text-sm text-gray-500">Sunday</span>
+                    <span class="text-3xl font-bold my-2 text-whimsical-text">9:00 AM</span>
+                    <span class="uppercase tracking-widest text-sm text-gray-500">Starts</span>
+                </div>
+                <div class="h-16 w-px bg-whimsical-purple/30 hidden md:block"></div>
+                <div class="flex flex-col items-center text-center">
+                    <span class="uppercase tracking-widest text-sm text-gray-500">Location</span>
+                    <span class="text-xl font-bold my-2 text-whimsical-text leading-tight">Glenmarie<br>Glass House</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Details Section -->
+    <section id="details" class="py-24 px-4 relative">
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="font-serif text-4xl md:text-5xl text-whimsical-text mb-16 relative inline-block">
+                Wedding Itinerary
+                <span class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-whimsical-purple/30 rounded-full"></span>
+            </h2>
+            
+            <div class="grid md:grid-cols-1 gap-10 max-w-2xl mx-auto">
+                <!-- Pernikahan Card -->
+                <div class="p-8 rounded-2xl bg-white shadow-xl border border-whimsical-purple/10 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-whimsical-pink via-whimsical-purple to-whimsical-pink"></div>
+                    
+                    <div class="w-16 h-16 mx-auto mb-6 text-whimsical-purple bg-whimsical-purple/10 rounded-full flex items-center justify-center group-hover:bg-whimsical-purple group-hover:text-white transition-colors duration-300">
+                        <i data-lucide="heart-handshake" class="w-8 h-8"></i>
+                    </div>
+                    
+                    <h3 class="font-serif text-3xl mb-3 font-bold text-whimsical-text">Majlis Pernikahan</h3>
+                    <div class="inline-block px-4 py-1 bg-whimsical-cream rounded-full text-whimsical-purple font-bold mb-4 border border-whimsical-purple/20">
+                        9:00 AM - 11:00 AM
+                    </div>
+                    
+                    <div class="space-y-2 text-gray-600">
+                        <p class="font-medium">Glenmarie Glass House</p>
+                        <p class="italic text-sm opacity-80">Solemnization Ceremony</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 p-10 glass-card rounded-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-whimsical-purple transform rotate-12">
+                    <i data-lucide="map-pin" class="w-48 h-48"></i>
+                </div>
+                <h3 class="font-serif text-2xl mb-4 text-whimsical-purple font-bold">Getting There</h3>
+                <p class="mb-6 text-lg">Glenmarie Glass House is located within the lush greenery of Glenmarie.</p>
+                <a href="https://maps.google.com/?q=Glenmarie+Glass+House" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-whimsical-purple/30 rounded-full text-whimsical-text hover:bg-whimsical-purple hover:text-white transition-all shadow-sm hover:shadow-md">
+                    <i data-lucide="map" class="w-4 h-4"></i>
+                    View Map
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section id="story" class="py-24 px-4 bg-whimsical-text text-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        
+        <div class="max-w-3xl mx-auto text-center relative z-10">
+            <div class="w-20 h-20 mx-auto mb-8 text-whimsical-pink opacity-80">
+                 <i data-lucide="sparkles" class="w-full h-full"></i>
+            </div>
+            <h2 class="font-script text-5xl md:text-7xl mb-10 text-whimsical-pink">A Fairy Tale Beginning</h2>
+            <p class="font-serif text-xl leading-relaxed opacity-90 mb-8 font-light tracking-wide">
+                "Once in a while, right in the middle of an ordinary life, love gives us a fairy tale."
+            </p>
+            <p class="font-sans text-lg opacity-80 leading-relaxed">
+                We invite you to witness the beginning of our greatest adventure yet.
+            </p>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="py-24 px-4 relative">
+        <div class="max-w-lg mx-auto glass-card shadow-2xl rounded-2xl p-8 md:p-12 relative border-t-4 border-whimsical-purple">
+            
+            <h2 class="font-serif text-4xl text-center mb-2 text-whimsical-text">R.S.V.P.</h2>
+            <p class="text-center text-whimsical-purple/80 mb-10 italic">Kindly respond by January 1st, 2026</p>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="hidden text-center py-8">
+                <div class="animate-spin w-10 h-10 border-4 border-whimsical-purple border-t-transparent rounded-full mx-auto mb-4"></div>
+                <p class="text-gray-500 font-serif">Sending your love...</p>
+            </div>
+
+            <!-- Success State -->
+            <div id="successState" class="hidden text-center py-8">
+                <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+                    <i data-lucide="check" class="w-10 h-10"></i>
+                </div>
+                <h3 class="font-serif text-3xl mb-3 text-whimsical-text">Wonderful!</h3>
+                <p class="text-gray-600">Your RSVP has been received.</p>
+                <button onclick="resetForm()" class="mt-8 text-sm text-whimsical-purple hover:text-whimsical-text underline">Submit another response</button>
+            </div>
+
+            <!-- Form -->
+            <form id="rsvpForm" class="space-y-6">
+                <div>
+                    <label class="block font-serif text-gray-700 mb-2 font-bold">Name(s)</label>
+                    <input type="text" id="name" required class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-whimsical-purple focus:ring-2 focus:ring-whimsical-purple/20 outline-none transition-all bg-white/50" placeholder="e.g. Amirah & Family">
+                </div>
+
+                <div>
+                    <label class="block font-serif text-gray-700 mb-2 font-bold">Attendance</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="attendance" value="Joyfully Accepts" class="peer sr-only" checked>
+                            <div class="text-center py-3 px-2 border rounded-lg border-gray-200 peer-checked:bg-whimsical-purple peer-checked:text-white peer-checked:border-whimsical-purple transition-all hover:bg-gray-50">
+                                Accepts
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="attendance" value="Regretfully Declines" class="peer sr-only">
+                            <div class="text-center py-3 px-2 border rounded-lg border-gray-200 peer-checked:bg-gray-400 peer-checked:text-white peer-checked:border-gray-400 transition-all hover:bg-gray-50">
+                                Declines
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-serif text-gray-700 mb-2 font-bold">Total Pax</label>
+                    <select id="guestCount" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-whimsical-purple focus:ring-2 focus:ring-whimsical-purple/20 outline-none bg-white/50">
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="3">3 People</option>
+                        <option value="4">4 People</option>
+                        <option value="5">5 People</option>
+                        <option value="6">6 People</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-serif text-gray-700 mb-2 font-bold">Wishes for the Couple</label>
+                    <textarea id="message" rows="3" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:border-whimsical-purple focus:ring-2 focus:ring-whimsical-purple/20 outline-none transition-all bg-white/50" placeholder="Send your love..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-whimsical-text text-white font-serif tracking-widest hover:bg-whimsical-purple transition-colors duration-300 shadow-lg rounded-lg mt-4 text-lg">
+                    CONFIRM RSVP
+                </button>
+            </form>
+        </div>
+
+        <!-- Admin / View Guests Toggle -->
+        <div class="max-w-md mx-auto mt-8 text-center">
+            <button onclick="toggleGuestList()" class="text-xs text-whimsical-purple/60 hover:text-whimsical-purple uppercase tracking-widest border-b border-transparent hover:border-whimsical-purple transition-all">
+                View Guest List
+            </button>
+        </div>
+
+        <!-- Guest List Container -->
+        <div id="guestListContainer" class="hidden max-w-2xl mx-auto mt-8 bg-white/90 backdrop-blur-sm p-8 shadow-xl rounded-xl border-t-4 border-whimsical-pink">
+            <h3 class="font-serif text-2xl mb-6 text-center border-b pb-4 text-whimsical-text">Confirmed Guests</h3>
+            <div id="guestList" class="space-y-4 max-h-80 overflow-y-auto pr-2">
+                <!-- Guests loaded here -->
+                <p class="text-center text-gray-400 italic">Loading guests...</p>
+            </div>
+            <div class="mt-4 pt-4 border-t text-right font-bold font-serif text-whimsical-text">
+                Total Attending: <span id="totalCount" class="text-whimsical-purple text-2xl">0</span>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-whimsical-text text-white py-16 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
+        <h2 class="font-script text-5xl mb-6 text-whimsical-pink relative z-10">Amirah & Al Qayyum</h2>
+        <p class="font-serif italic opacity-70 mb-8 relative z-10">Thank you for being part of our journey.</p>
+        <p class="text-xs uppercase tracking-widest opacity-30 relative z-10">#AmirahxAlQayyum2026</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Firebase Configuration
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = __app_id || 'default-app';
+
+        let currentUser = null;
+
+        // Authentication logic
+        const initAuth = async () => {
+             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                try {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } catch (e) {
+                    console.error("Auth Token Error, falling back to anon", e);
+                    await signInAnonymously(auth);
+                }
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+        
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            }
+        });
+
+        // Form Handling
+        const form = document.getElementById('rsvpForm');
+        const loadingState = document.getElementById('loadingState');
+        const successState = document.getElementById('successState');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const name = document.getElementById('name').value;
+            const attendance = document.querySelector('input[name="attendance"]:checked').value;
+            const guests = parseInt(document.getElementById('guestCount').value);
+            const message = document.getElementById('message').value;
+
+            // UI Loading
+            form.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+
+            try {
+                const rsvpRef = collection(db, 'artifacts', appId, 'public', 'data', 'rsvps_amirah');
+                
+                await addDoc(rsvpRef, {
+                    name: name,
+                    attendance: attendance,
+                    guestCount: guests,
+                    message: message,
+                    submittedAt: serverTimestamp(),
+                    userId: currentUser.uid
+                });
+
+                // UI Success
+                loadingState.classList.add('hidden');
+                successState.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Error submitting RSVP:", error);
+                alert("There was an error submitting your RSVP. Please try again.");
+                loadingState.classList.add('hidden');
+                form.classList.remove('hidden');
+            }
+        });
+
+        // Global functions for UI
+        window.resetForm = () => {
+            successState.classList.add('hidden');
+            form.reset();
+            form.classList.remove('hidden');
+        };
+
+        let unsubscribeGuestList = null;
+
+        window.toggleGuestList = () => {
+            const container = document.getElementById('guestListContainer');
+            const list = document.getElementById('guestList');
+            const totalCountEl = document.getElementById('totalCount');
+            
+            const isHidden = container.classList.contains('hidden');
+            
+            if (isHidden) {
+                container.classList.remove('hidden');
+                
+                // Fetch data
+                if (!unsubscribeGuestList && currentUser) {
+                     const rsvpRef = collection(db, 'artifacts', appId, 'public', 'data', 'rsvps_amirah');
+                     const q = query(rsvpRef);
+
+                     unsubscribeGuestList = onSnapshot(q, (snapshot) => {
+                        let html = '';
+                        let totalGuests = 0;
+                        
+                        const rsvps = [];
+                        snapshot.forEach(doc => {
+                            rsvps.push({ id: doc.id, ...doc.data() });
+                        });
+
+                        // Sort in memory by time (newest first)
+                        rsvps.sort((a, b) => {
+                            const tA = a.submittedAt ? a.submittedAt.seconds : 0;
+                            const tB = b.submittedAt ? b.submittedAt.seconds : 0;
+                            return tB - tA;
+                        });
+
+                        if (rsvps.length === 0) {
+                            html = '<p class="text-center text-gray-400 italic">No RSVPs yet.</p>';
+                        } else {
+                            rsvps.forEach(data => {
+                                const isAccept = data.attendance === 'Joyfully Accepts';
+                                if (isAccept) totalGuests += (data.guestCount || 1);
+                                
+                                const statusColor = isAccept ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500';
+                                
+                                html += `
+                                    <div class="flex items-start justify-between p-4 border-b border-gray-100 last:border-0 hover:bg-whimsical-pink/5 transition-colors rounded-lg">
+                                        <div>
+                                            <p class="font-bold text-whimsical-text text-lg">${data.name || 'Anonymous'}</p>
+                                            ${data.message ? `<p class="text-sm text-gray-500 italic mt-1 font-serif">"${data.message}"</p>` : ''}
+                                        </div>
+                                        <div class="flex flex-col items-end">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${statusColor}">
+                                                ${isAccept ? 'Attending' : 'Declined'}
+                                            </span>
+                                            ${isAccept ? `<span class="text-xs text-gray-400 mt-1 font-bold">${data.guestCount} Pax</span>` : ''}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        }
+                        
+                        list.innerHTML = html;
+                        totalCountEl.textContent = totalGuests;
+
+                     }, (error) => {
+                         console.error("Error fetching guest list:", error);
+                         list.innerHTML = '<p class="text-red-500 text-center">Error loading guest list.</p>';
+                     });
+                }
+
+            } else {
+                container.classList.add('hidden');
+            }
+        };
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
